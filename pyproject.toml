@@ -1,0 +1,96 @@
+[project]
+name = "meeting-observer"
+version = "0.1.0"
+description = "Meeting observer bot for Google Meet and realtime meeting summarization"
+authors = [
+    { name = "AjmalPonneth", email = "ponnethajmal@gmail.com" }
+]
+readme = "README.md"
+requires-python = ">=3.12,<4.0"
+
+dependencies = [
+    "playwright>=1.58.0,<2.0.0",
+    "httpx>=0.28.1,<0.29.0",
+    "aiohttp>=3.13.5,<4.0.0",
+    "gunicorn>=25.3.0,<26.0.0",
+    "websockets>=16.0,<17.0",
+    "openai>=2.36.0,<3.0.0",
+]
+
+[project.scripts]
+meeting-observer = "worker.cli:main"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.11.8",
+    "pyright>=1.1.400",
+    "pre-commit>=4.2.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["worker"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+exclude = [
+    ".git",
+    ".venv",
+    "__pycache__",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "UP",
+    "B",
+    "SIM",
+    "ASYNC",
+    "RUF",
+]
+
+ignore = [
+    "B008",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+
+pythonVersion = "3.12"
+typeCheckingMode = "standard"
+
+include = [
+    "worker",
+]
+
+exclude = [
+    ".venv",
+    "**/__pycache__",
+    "build",
+    "dist",
+]
+
+reportMissingImports = true
+reportMissingTypeStubs = false
+
+reportUnknownMemberType = false
+reportUnknownArgumentType = false
+reportUnknownVariableType = false
+reportUnknownLambdaType = false
+
+reportAny = false
