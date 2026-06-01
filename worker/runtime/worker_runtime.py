@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -36,8 +37,9 @@ class WorkerRuntime:
         if self.playwright is None:
             raise RuntimeError("WorkerRuntime is not started")
 
-        user_data_dir = Path(f"/tmp/playwright-worker-profile-{os.getpid()}")
-
+        user_data_dir = Path(
+            f"/tmp/playwright-worker-profile-{os.getpid()}-{uuid.uuid4().hex}"
+        )
         return await self.playwright.chromium.launch_persistent_context(
             user_data_dir=str(user_data_dir),
             headless=False,
