@@ -10,11 +10,10 @@ requires-python = ">=3.12,<4.0"
 
 dependencies = [
     "playwright>=1.58.0,<2.0.0",
-    "httpx>=0.28.1,<0.29.0",
     "aiohttp>=3.13.5,<4.0.0",
-    "gunicorn>=25.3.0,<26.0.0",
     "websockets>=16.0,<17.0",
     "openai>=2.36.0,<3.0.0",
+    "psutil>=7.2.2",
 ]
 
 [project.scripts]
@@ -25,6 +24,7 @@ dev = [
     "ruff>=0.11.8",
     "pyright>=1.1.400",
     "pre-commit>=4.2.0",
+    "memray>=1.19.3",
 ]
 
 [build-system]

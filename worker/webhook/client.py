@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-import httpx
+import aiohttp
 
 from worker.session.config import SessionConfig
 from worker.webhook.type import WebhookType
@@ -53,24 +53,21 @@ class Client:
             headers["Authorization"] = f"Bearer {consumer.api_key}"
 
         try:
-            client = httpx.AsyncClient(timeout=httpx.Timeout(5.0))
-            response = await client.post(
+            async with aiohttp.request(
+                "POST",
                 consumer.webhook_url,
                 json=webhook_payload,
                 headers=headers,
-            )
-            if response.status_code >= 400:
-                logger.warning(
-                    "webhook failed code=%s status=%s",
-                    event_type,
-                    response.status_code,
-                )
-                return
+                timeout=aiohttp.ClientTimeout(total=5),
+            ) as response:
+                if response.status >= 400:
+                    logger.warning(
+                        "webhook failed code=%s status=%s",
+                        event_type,
+                        response,
+                    )
+                    return
 
-            logger.info(
-                "webhook sent code=%s status=%s",
-                event_type,
-                response.status_code,
-            )
-        except httpx.HTTPError:
+                logger.info("webhook sent code=%s status=%s", event_type, response)
+        except aiohttp.ClientError:
             logger.exception("webhook request failed code=%s", event_type)
